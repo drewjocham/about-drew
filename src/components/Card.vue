@@ -3,19 +3,18 @@
 </script>
 
 <template>
-    <div class="container mx-auto p-8 h-screen flex items-center justify-center relative">
-        <div class="absolute top-0 left-0 p-4 flex space-x-2">
+    <div class="container mx-auto p-4 h-screen flex flex-col items-center justify-center relative">
+        <div class="absolute top-2 left-2 p-2 flex space-x-2 z-10"> <button
+            class="bg-gray-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded"
+            @click="$i18n.locale = 'en'"
+        >
+            EN
+        </button>
             <button
-                class="bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                @click="$i18n.locale = 'en'"
-            >
-                English
-            </button>
-            <button
-                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-3 text-sm rounded"
                 @click="$i18n.locale = 'de'"
             >
-                Deutsch
+                DE
             </button>
         </div>
         <div class="relative  bg-opacity-70 backdrop-blur-sm rounded-lg shadow-md overflow-hidden w-full max-w-3xl">
