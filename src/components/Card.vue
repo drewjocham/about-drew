@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="container overflow-y-auto mx-auto p-4 h-screen flex flex-col items-center justify-center relative">
+    <div class="container overflow-y-auto mx-auto p-2 h-screen flex flex-col items-center justify-center relative">
         <div class="absolute top-2 left-2 p-2 flex space-x-2 z-10">
             <button
                 class="bg-gray-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded"
@@ -26,7 +26,7 @@
             <div class="p-8 relative z-10 flex flex-col h-full border-gray-50 bg-white">
                 <h1 class="text-4xl text-gray-600 font-bold mb-4">Drew Jocham</h1>
                 <h2 class="text-2xl text-gray-600 mb-6">Software Engineer</h2>
-                <div class="overflow-y-auto mb-auto max-h-48">  <-- Added scrolling and max height here
+                <div class="overflow-y-auto mb-auto max-h-48">
                     <p class="text-black">
                         {{ $t('msg') }}
                     </p>
