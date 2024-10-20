@@ -1,4 +1,4 @@
-version: '3.0'
+version: '3'
 services:
     view:
         build:
@@ -8,10 +8,53 @@ services:
             - API_PORT=8081
             - PORT=8080 # port is a reserved env name on GCP
             - NODE_ENV=production
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.nginx.rule=Host(`drewjocham.com`)"
+            - "traefik.http.routers.nginx.entrypoints=websecure"
+            - "traefik.http.routers.nginx.tls=true"
+            - "traefik.http.routers.nginx.tls.certresolver=myresolver"
         networks:
-            - personal
+            - traefik
         ports:
-            - "80:8080"
+            - "8081:8080"
+            #- "443:443"
+    reverse-proxy:
+        image: traefik:v2.11
+        command: --configFile=/etc/traefik/traefik.yml
+        ports:
+            - "80:80"
             - "443:443"
+            - "8080:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./traefik.yml:/etc/traefik/traefik.yml
+            - ./acme.json:/acme.json
+        networks:
+            - traefik
+    grafana:
+        image: grafana/grafana
+        container_name: grafana
+        restart: unless-stopped
+        ports:
+            - '3000:3000'
+        volumes:
+            - grafana-storage:/var/lib/grafana
+    prometheus:
+        image: prom/prometheus
+        container_name: prometheus
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+        ports:
+            - 9090:9090
+        restart: unless-stopped
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+            - prom_data:/prometheus
+volumes:
+    grafana-storage: {}
+    prom_data:
+
 networks:
-    personal:
+    traefik:
+        external: true
