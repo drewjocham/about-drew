@@ -1,0 +1,15 @@
+entryPoints:
+  web:
+    address: ":80"
+  webSecure:
+    address: ":443"
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: "test.drew.xyz"
+      storage: "acme.json"
+      httpChallenge:
+        entryPoint: web
+providers:
+  docker:
+    exposedByDefault: false

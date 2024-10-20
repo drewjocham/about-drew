@@ -1,4 +1,4 @@
-version: '3.0'
+version: '3.9'
 services:
     view:
         build:
@@ -8,10 +8,41 @@ services:
             - API_PORT=8081
             - PORT=8080 # port is a reserved env name on GCP
             - NODE_ENV=production
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.view.rule=Host(`drewjocham.com`)"
+            - "traefik.http.routers.view.entrypoints=websecure"
+            - "traefik.http.routers.view.tls=true"
+            - "traefik.http.routers.view.tls.certresolver=myresolver"
+            - "traefik.http.routers.view.entrypoints=web"
         networks:
-            - personal
+            - traefik
         ports:
-            - "80:8080"
+            - "8081:8080"
+            #- "443:443"
+    reverse-proxy:
+        image: "traefik:v3.1"
+        container_name: "traefik"
+        command:
+            #- "--log.level=DEBUG"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entryPoints.web.address=:80"
+            - "--entryPoints.websecure.address=:443"
+            - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+            - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+            - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+            - "--certificatesresolvers.myresolver.acme.email=contact@jocham.io"
+            - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+        ports:
+            - "80:80"
             - "443:443"
+            - "8080:8080"
+        volumes:
+            - "./letsencrypt:/letsencrypt"
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
 networks:
-    personal:
+    traefik:
+        external: true
