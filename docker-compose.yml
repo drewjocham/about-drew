@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3'
 services:
     view:
         build:
@@ -10,38 +10,50 @@ services:
             - NODE_ENV=production
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.view.rule=Host(`drewjocham.com`)"
-            - "traefik.http.routers.view.entrypoints=websecure"
-            - "traefik.http.routers.view.tls=true"
-            - "traefik.http.routers.view.tls.certresolver=myresolver"
-            - "traefik.http.routers.view.entrypoints=web"
+            - "traefik.http.routers.nginx.rule=Host(`drewjocham.com`)"
+            - "traefik.http.routers.nginx.entrypoints=websecure"
+            - "traefik.http.routers.nginx.tls=true"
+            - "traefik.http.routers.nginx.tls.certresolver=myresolver"
         networks:
             - traefik
         ports:
             - "8081:8080"
             #- "443:443"
     reverse-proxy:
-        image: "traefik:v3.1"
-        container_name: "traefik"
-        command:
-            #- "--log.level=DEBUG"
-            - "--api.insecure=true"
-            - "--providers.docker=true"
-            - "--providers.docker.exposedbydefault=false"
-            - "--entryPoints.web.address=:80"
-            - "--entryPoints.websecure.address=:443"
-            - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-            - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-            - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-            - "--certificatesresolvers.myresolver.acme.email=contact@jocham.io"
-            - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+        image: traefik:v2.11
+        command: --configFile=/etc/traefik/traefik.yml
         ports:
             - "80:80"
             - "443:443"
             - "8080:8080"
         volumes:
-            - "./letsencrypt:/letsencrypt"
-            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./traefik.yml:/etc/traefik/traefik.yml
+            - ./acme.json:/acme.json
+        networks:
+            - traefik
+    grafana:
+        image: grafana/grafana
+        container_name: grafana
+        restart: unless-stopped
+        ports:
+            - '3000:3000'
+        volumes:
+            - grafana-storage:/var/lib/grafana
+    prometheus:
+        image: prom/prometheus
+        container_name: prometheus
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+        ports:
+            - 9090:9090
+        restart: unless-stopped
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+            - prom_data:/prometheus
+volumes:
+    grafana-storage: {}
+    prom_data:
 
 networks:
     traefik:

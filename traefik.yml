@@ -1,15 +1,17 @@
 entryPoints:
   web:
     address: ":80"
-  webSecure:
+  websecure:
     address: ":443"
+
 certificatesResolvers:
   myresolver:
     acme:
-      email: "test.drew.xyz"
-      storage: "acme.json"
+      email: drew@jocham.io
+      storage: acme.json
       httpChallenge:
         entryPoint: web
+
 providers:
   docker:
     exposedByDefault: false
