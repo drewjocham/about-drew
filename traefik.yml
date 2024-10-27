@@ -3,6 +3,8 @@ entryPoints:
     address: ":80"
   websecure:
     address: ":443"
+  tls:
+      certresolver: myresolver
 
 certificatesResolvers:
   myresolver:
@@ -14,4 +16,4 @@ certificatesResolvers:
 
 providers:
   docker:
-    exposedByDefault: false
+    exposedByDefault: true
