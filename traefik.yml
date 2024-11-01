@@ -16,4 +16,4 @@ certificatesResolvers:
 
 providers:
   docker:
-    exposedByDefault: true
+    exposedByDefault: false
