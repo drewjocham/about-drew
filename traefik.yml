@@ -3,9 +3,30 @@ entryPoints:
     address: ":80"
   websecure:
     address: ":443"
-  tls:
-      certresolver: myresolver
+  tls: {}
 
+http:
+    routers:
+        http-catchall:
+            rule: "HostRegexp(`{host:.+}`)"
+            entryPoints:
+                - web
+            middlewares:
+                - redirect-to-https
+
+    middlewares:
+        redirect-to-https:
+            redirectScheme:
+                scheme: https
+                permanent: true
+        hsts:
+            headers:
+                -   name: Strict-Transport-Security
+                    value: "max-age=31536000; includeSubDomains; preload"
+middlewares:
+    - redirect-to-https
+    - hsts
+    -
 certificatesResolvers:
   myresolver:
     acme:
