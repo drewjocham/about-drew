@@ -10,10 +10,11 @@ services:
             - NODE_ENV=production
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.nginx.rule=Host(`drewjocham.com`)"
-            - "traefik.http.routers.nginx.entrypoints=websecure"
-            - "traefik.http.routers.nginx.tls=true"
-            - "traefik.http.routers.nginx.tls.certresolver=myresolver"
+            - "traefik.http.routers.view.rule=Host(`drewjocham.com`)"
+            - "traefik.http.routers.view.entrypoints=websecure"
+            - "traefik.http.routers.view.tls=true"
+            - "traefik.http.routers.view.tls.certresolver=myresolver"
+
         networks:
             - traefik
         ports:
