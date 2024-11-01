@@ -1,9 +1,20 @@
 entryPoints:
-  web:
-    address: ":80"
-  websecure:
-    address: ":443"
-  tls: {}
+    web:
+        address: ":80"
+    websecure:
+        address: ":443"
+
+providers:
+    docker:
+        exposedByDefault: false
+
+certificatesResolvers:
+    myresolver:
+        acme:
+            email: drew@jocham.io
+            storage: acme.json
+            httpChallenge:
+                entryPoint: web
 
 http:
     routers:
@@ -23,18 +34,4 @@ http:
             headers:
                 -   name: Strict-Transport-Security
                     value: "max-age=31536000; includeSubDomains; preload"
-middlewares:
-    - redirect-to-https
-    - hsts
-    -
-certificatesResolvers:
-  myresolver:
-    acme:
-      email: drew@jocham.io
-      storage: acme.json
-      httpChallenge:
-        entryPoint: web
 
-providers:
-  docker:
-    exposedByDefault: false
