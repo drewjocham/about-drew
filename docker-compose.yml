@@ -3,18 +3,12 @@ services:
     view:
         build:
             context: ./
-        environment:
-            - API_HOST=api
-            - API_PORT=8081
-            - PORT=8080 # port is a reserved env name on GCP
-            - NODE_ENV=production
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.view.rule=Host(`drewjocham.com`)"
             - "traefik.http.routers.view.entrypoints=websecure"
             - "traefik.http.routers.view.tls=true"
             - "traefik.http.routers.view.tls.certresolver=myresolver"
-
         networks:
             - traefik
         ports:
@@ -23,8 +17,8 @@ services:
         image: traefik:v2.11
         command: --configFile=/etc/traefik/traefik.yml
         ports:
-            - "80:80"
-            - "443:443"
+            - "80:443"
+            #- "443:443"
             - "8080:8080"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
