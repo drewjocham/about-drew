@@ -6,7 +6,7 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.view.rule=Host(`drewjocham.com`)"
-            - "traefik.http.routers.view.entrypoints=websecure"
+            #- "traefik.http.routers.view.entrypoints=websecure"
             - "traefik.http.routers.view.tls=true"
             - "traefik.http.routers.view.tls.certresolver=myresolver"
         networks:
