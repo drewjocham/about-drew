@@ -9,6 +9,11 @@ services:
             #- "traefik.http.routers.view.entrypoints=websecure"
             - "traefik.http.routers.view.tls=true"
             - "traefik.http.routers.view.tls.certresolver=myresolver"
+        environment:
+            - API_HOST=api
+            - API_PORT=8081
+            - PORT=8080 # port is a reserved env name on GCP
+            - NODE_ENV=production
         networks:
             - traefik
         ports:
