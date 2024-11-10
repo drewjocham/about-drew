@@ -48,7 +48,7 @@ http {
      # ssl_session_timeout 10m;
 
      server {
-         listen ${PORT};
+         #listen ${PORT};
          listen 80;
 
          # SSL configuration
